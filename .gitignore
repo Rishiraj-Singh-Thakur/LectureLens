@@ -1,0 +1,14 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+uploaded_videos/
+01_data/processing/
+01_data/01_Videos/
+01_data/02_audios/
+01_data/
+.ipynb_checkpoints/
+.vscode/
+anaconda_projects/
+02_vectors/chunk_vectors.npy

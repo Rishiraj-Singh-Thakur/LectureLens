@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Lecture | Lecture Timestamp Finder</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #11131d;
+            --panel: #1c2030;
+            --input: #151926;
+            --border: #343b52;
+            --text: #f3f4f6;
+            --muted: #9ba6bd;
+            --purple: #8b5cf6;
+            --blue: #6366f1;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 36px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse at top, #25203d 0%, transparent 45%),
+                var(--bg);
+        }
+
+        .upload-box {
+            width: 540px;
+            max-width: 100%;
+            padding: 34px;
+            background: linear-gradient(145deg, #222738, #191d2b);
+            border: 1px solid #363c52;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .38);
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo {
+            width: 46px;
+            height: 46px;
+            margin: 0 auto 15px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            color: white;
+            font-size: 23px;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            box-shadow: 0 8px 24px #7549e344;
+        }
+
+        .heading h1 {
+            margin: 0 0 9px;
+            font-size: 27px;
+            letter-spacing: -.6px;
+        }
+
+        .heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 17px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #dce2f0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            min-height: 45px;
+            padding: 12px 13px;
+            color: white;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            outline: none;
+            font: inherit;
+            font-size: 13px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .field input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px #8b5cf622;
+        }
+
+        .field input::placeholder {
+            color: #717c94;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            color: var(--muted);
+        }
+
+        input[type="file"]::file-selector-button {
+            padding: 7px 11px;
+            margin-right: 10px;
+            color: #e9ddff;
+            background: #33264e;
+            border: 1px solid #59417f;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            min-height: 47px;
+            border: 0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s, filter .2s, opacity .2s;
+        }
+
+        button:hover:not(:disabled) {
+            filter: brightness(1.12);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: .7;
+        }
+
+        .upload-button {
+            margin-top: 24px;
+            color: white;
+            background: linear-gradient(100deg, #7c3aed, #6366f1);
+            box-shadow: 0 8px 22px #6d45dc30;
+        }
+
+        .back-button {
+            margin-top: 11px;
+            color: #dce2f0;
+            background: #30364a;
+            border: 1px solid #414961;
+        }
+
+        #progressSection {
+            display: none;
+            margin-top: 24px;
+            padding: 21px;
+            background: #151926;
+            border: 1px solid #353c52;
+            border-radius: 14px;
+        }
+
+        .progress-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .progress-heading h2 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        #percentage {
+            color: #b9a0ff;
+            font-size: 19px;
+            font-weight: 750;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-track {
+            height: 9px;
+            overflow: hidden;
+            background: #30364a;
+            border-radius: 20px;
+        }
+
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #8b5cf6, #6366f1, #a78bfa);
+            transition: width .45s ease;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 16px;
+        }
+
+        #spinner {
+            display: none;
+            flex-shrink: 0;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #454b62;
+            border-top-color: #b9a0ff;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        #currentStep {
+            margin: 0;
+            color: #e3e7f5;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        #statusText {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        #resultMessage {
+            display: none;
+            margin-top: 17px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        #resultMessage.success {
+            display: block;
+            color: #a7f3d0;
+            background: #12342d;
+            border: 1px solid #27644f;
+        }
+
+        #resultMessage.error {
+            display: block;
+            color: #fecaca;
+            background: #3a2029;
+            border: 1px solid #75404c;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 18px 12px;
+                align-items: flex-start;
+            }
+
+            .upload-box {
+                padding: 23px 19px;
+                border-radius: 15px;
+            }
+
+            .heading h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="upload-box">
+        <header class="heading">
+            <div class="logo" aria-hidden="true">▶</div>
+            <h1>Upload Lecture</h1>
+            <p>Upload your lecture and make it ready for AI-powered search.</p>
+        </header>
+
+        <form id="uploadForm"
+              action="/upload-video"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <input type="hidden" id="upload_id" name="upload_id">
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="video">Video File</label>
+                    <input type="file" id="video" name="video"
+                           accept="video/*" required>
+                </div>
+
+                <div class="field">
+                    <label for="video_code">Video Code</label>
+                    <input type="text" id="video_code" name="video_code"
+                        placeholder="e.g. PY101"
+                        title="Use a unique video code. Remember this code for searching this lecture later."
+                        required>
+                        <small class="field-help">
+                            Use a unique code and remember it for searching this lecture later.
+                        </small>
+                </div>
+                <div class="field">
+                    <label for="course">Course</label>
+                    <input type="text" id="course" name="course"
+                           placeholder="e.g. Python Programming" required>
+                </div>
+
+                <div class="field">
+                    <label for="lecture_num">Lecture Number</label>
+                    <input type="text" id="lecture_num" name="lecture_num"
+                           placeholder="e.g. Lecture-10" required>
+                </div>
+
+                <div class="field">
+                    <label for="lecture_title">Lecture Title</label>
+                    <input type="text" id="lecture_title" name="lecture_title"
+                           placeholder="e.g. Python Loops" required>
+                </div>
+
+                <div class="field">
+                    <label for="topic">Topic</label>
+                    <input type="text" id="topic" name="topic"
+                           placeholder="e.g. For Loop" required>
+                </div>
+            </div>
+
+            <button type="submit" class="upload-button" id="uploadButton">
+                Upload &amp; Process
+            </button>
+        </form>
+
+        <section id="progressSection" aria-live="polite">
+            <div class="progress-heading">
+                <h2 id="progressTitle">Processing Lecture</h2>
+                <span id="percentage">0%</span>
+            </div>
+
+            <div class="progress-track"
+                 role="progressbar"
+                 id="progressTrack"
+                 aria-label="Lecture processing progress"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 aria-valuenow="0">
+                <div id="progressBar"></div>
+            </div>
+
+            <div class="step-row">
+                <span id="spinner"></span>
+                <p id="currentStep">Preparing upload...</p>
+            </div>
+
+            <p id="statusText">Please keep this page open during processing.</p>
+        </section>
+
+        <div id="resultMessage" role="status" aria-live="polite"></div>
+
+        <form action="{{ '/admin-dashboard' if session.get('role') == 'admin' else '/' }}" method="GET">
+            <button type="submit" class="back-button">Back To Dashboard</button>
+        </form>
+    </main>
+
+    <script>
+        const form = document.getElementById("uploadForm");
+        const uploadButton = document.getElementById("uploadButton");
+        const progressSection = document.getElementById("progressSection");
+        const progressBar = document.getElementById("progressBar");
+        const progressTrack = document.getElementById("progressTrack");
+        const percentage = document.getElementById("percentage");
+        const progressTitle = document.getElementById("progressTitle");
+        const currentStep = document.getElementById("currentStep");
+        const statusText = document.getElementById("statusText");
+        const spinner = document.getElementById("spinner");
+        const resultMessage = document.getElementById("resultMessage");
+        const uploadIdInput = document.getElementById("upload_id");
+
+        let isUploading = false;
+        let pollTimer = null;
+        let finished = false;
+
+        function setProgress(value, step) {
+            const percent = Math.max(0, Math.min(100, Number(value) || 0));
+
+            progressBar.style.width = percent + "%";
+            percentage.textContent = percent + "%";
+            progressTrack.setAttribute("aria-valuenow", percent);
+
+            if (step) {
+                currentStep.textContent = step;
+            }
+        }
+
+        function showMessage(type, message) {
+            resultMessage.className = type;
+            resultMessage.textContent = message;
+            resultMessage.style.display = "block";
+        }
+
+        function stopPolling() {
+            if (pollTimer !== null) {
+                clearInterval(pollTimer);
+                pollTimer = null;
+            }
+        }
+
+        function finishUpload(type, message) {
+            if (finished) return;
+
+            finished = true;
+            stopPolling();
+            isUploading = false;
+            uploadButton.disabled = false;
+            uploadButton.textContent =
+                type === "error" ? "Try Again" : "Upload & Process";
+
+            spinner.style.display = "none";
+
+            if (type === "success") {
+                setProgress(100, "Processing completed successfully!");
+                progressTitle.textContent = "Lecture Ready";
+                statusText.textContent = "Your lecture is ready! Return to your dashboard to access it. Remember your Video Code for searching.";
+            } else {
+                progressTitle.textContent = "Processing Failed";
+                statusText.textContent = "Correct the issue and try again.";
+            }
+
+            showMessage(type, message);
+        }
+
+        async function pollProgress(uploadId) {
+            if (finished) return;
+
+            try {
+                const response = await fetch(
+                    "/api/upload-progress/" + encodeURIComponent(uploadId),
+                    { cache: "no-store" }
+                );
+
+                if (!response.ok) return;
+
+                const data = await response.json();
+
+                if (finished) return;
+
+                if (typeof data.percent === "number") {
+                    setProgress(data.percent, data.step);
+                }
+
+                if (data.status === "completed") {
+                    finishUpload(
+                        "success",
+                        "Lecture processed successfully! " +
+                        (data.saved_count ?? 0) +
+                        " chunks saved to MySQL. Video Code: " +
+                        document.getElementById("video_code").value.trim().toUpperCase()
+                    );
+                } else if (data.status === "failed") {
+                    finishUpload(
+                        "error",
+                        data.error || "Video processing failed."
+                    );
+                }
+            } catch (error) {
+                console.error("Progress polling error:", error);
+            }
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (isUploading || !form.reportValidity()) return;
+
+            isUploading = true;
+            finished = false;
+            uploadButton.disabled = true;
+            uploadButton.textContent = "Uploading...";
+            progressSection.style.display = "block";
+            resultMessage.style.display = "none";
+            resultMessage.className = "";
+            resultMessage.textContent = "";
+            spinner.style.display = "inline-block";
+            progressTitle.textContent = "Processing Lecture";
+            statusText.textContent =
+                "Uploading video and running processing stages...";
+
+            const uploadId =
+                window.crypto && window.crypto.randomUUID
+                    ? window.crypto.randomUUID()
+                    : Date.now().toString(36) +
+                    Math.random().toString(36).slice(2);
+
+            uploadIdInput.value = uploadId;
+            setProgress(0, "Uploading video...");
+
+            // Start polling independently while the upload request runs.
+            pollTimer = setInterval(() => pollProgress(uploadId), 1000);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", form.action, true);
+
+            // Real file-transfer progress (not processing progress).
+            xhr.upload.addEventListener("progress", function (event) {
+                if (!event.lengthComputable || finished) return;
+
+                const transferPercent =
+                    Math.round((event.loaded / event.total) * 100);
+
+                statusText.textContent =
+                    "Uploading video: " + transferPercent + "% transferred.";
+            });
+
+            xhr.addEventListener("load", function () {
+                if (finished) return;
+
+                let responseText = xhr.responseText || "";
+
+                if (xhr.status < 200 || xhr.status >= 300) {
+                    finishUpload(
+                        "error",
+                        responseText || "Upload failed. Please try again."
+                    );
+                    return;
+                }
+
+                // Give the progress API a chance to return its final status.
+                pollProgress(uploadId).then(() => {
+                    if (finished) return;
+
+                    // Do not claim success just because the HTTP request ended.
+                    // A completed status must come from the progress endpoint.
+                    statusText.textContent =
+                        "Server response received; checking final processing status.";
+
+                    setTimeout(() => {
+                        if (finished) return;
+
+                        pollProgress(uploadId).then(() => {
+                            if (finished) return;
+
+                            // Fallback for backends that return success text
+                            // but do not expose a completed progress status.
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                finishUpload("success", responseText);
+                            }
+                        });
+                    }, 1200);
+                });
+            });
+
+            xhr.addEventListener("error", function () {
+                finishUpload(
+                    "error",
+                    "Could not contact Flask. Check that the server is running."
+                );
+            });
+
+            xhr.addEventListener("abort", function () {
+                finishUpload("error", "Upload was cancelled.");
+            });
+
+            xhr.send(new FormData(form));
+        });
+    </script>
+</body>
+</html>

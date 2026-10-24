@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Lecture Timestamp Finder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #080b16;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            filter: blur(110px);
+            opacity: 0.22;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: #6546f5;
+            top: -130px;
+            left: -100px;
+        }
+
+        body::after {
+            background: #087eaa;
+            right: -130px;
+            bottom: -150px;
+        }
+
+        /* ---------------------------------------------------------
+           Signup Layout
+        --------------------------------------------------------- */
+        .signup-layout {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 610px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 25px;
+            background: rgba(17, 23, 42, 0.88);
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(18px);
+            animation: appear 0.65s ease both;
+        }
+
+        /* ---------------------------------------------------------
+           Brand Panel
+        --------------------------------------------------------- */
+        .brand-panel {
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background:
+                radial-gradient(circle at 15% 20%,
+                    rgba(112, 83, 255, 0.28), transparent 45%),
+                linear-gradient(145deg, #171d38, #101629 75%);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            color: white;
+            background: linear-gradient(135deg, #8067ff, #4f46e5);
+            box-shadow: 0 8px 24px rgba(99, 75, 255, 0.3);
+            font-size: 21px;
+        }
+
+        .brand-text span {
+            color: #a89bff;
+        }
+
+        .hero-content {
+            margin: 55px 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(167, 139, 250, 0.25);
+            border-radius: 30px;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.09);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            background: #a78bfa;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #a78bfa;
+        }
+
+        .hero-content h1 {
+            max-width: 390px;
+            font-size: clamp(34px, 4vw, 48px);
+            line-height: 1.14;
+            letter-spacing: -1.8px;
+            font-weight: 750;
+        }
+
+        .hero-content h1 span {
+            color: #a99aff;
+        }
+
+        .hero-content p {
+            max-width: 370px;
+            margin-top: 20px;
+            color: #a5aec5;
+            font-size: 15px;
+            line-height: 1.85;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 17px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #d5d9e8;
+            font-size: 13px;
+        }
+
+        .feature-icon {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.1);
+            color: #b8aaff;
+            font-size: 16px;
+        }
+
+        /* ---------------------------------------------------------
+           Signup Form
+        --------------------------------------------------------- */
+        .form-panel {
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-heading {
+            margin-bottom: 28px;
+        }
+
+        .form-heading h2 {
+            font-size: 30px;
+            letter-spacing: -0.8px;
+            margin-bottom: 10px;
+        }
+
+        .form-heading p {
+            color: #929bb2;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 9px;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            height: 49px;
+            padding: 0 15px;
+            outline: none;
+            border: 1px solid #303950;
+            border-radius: 11px;
+            color: #f8fafc;
+            background: #101629;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrap input::placeholder {
+            color: #69758d;
+        }
+
+        .input-wrap input:focus {
+            border-color: #8170ff;
+            box-shadow: 0 0 0 4px rgba(129, 112, 255, 0.12);
+        }
+
+        .password-input {
+            padding-right: 70px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            transform: translateY(-50%);
+            padding: 5px;
+            border: none;
+            background: transparent;
+            color: #a5aec5;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .toggle-password:hover {
+            color: #c4b5fd;
+        }
+
+        .signup-button {
+            width: 100%;
+            min-height: 51px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 11px;
+            color: white;
+            background: linear-gradient(100deg, #7863f8, #5b50e8);
+            box-shadow: 0 10px 25px rgba(99, 80, 232, 0.22);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(99, 80, 232, 0.35);
+        }
+
+        .login-link {
+            margin-top: 24px;
+            text-align: center;
+            color: #929bb2;
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: #b3a5ff;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            color: #d0c7ff;
+            text-decoration: underline;
+        }
+
+        .form-footer {
+            margin-top: 32px;
+            text-align: center;
+            color: #68738b;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        /* ---------------------------------------------------------
+           Responsive Layout
+        --------------------------------------------------------- */
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 16px;
+                align-items: flex-start;
+            }
+
+            .signup-layout {
+                max-width: 470px;
+                grid-template-columns: 1fr;
+                border-radius: 20px;
+            }
+
+            .brand-panel {
+                padding: 25px 28px 20px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            }
+
+            .hero-content {
+                margin: 28px 0 20px;
+            }
+
+            .hero-content h1 {
+                font-size: 33px;
+            }
+
+            .hero-content p {
+                margin-top: 12px;
+                font-size: 14px;
+            }
+
+            .feature-list {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 30px 28px;
+            }
+
+            .form-heading h2 {
+                font-size: 27px;
+            }
+
+            .form-footer {
+                margin-top: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="signup-layout">
+
+        <section class="brand-panel">
+            <div class="brand">
+                <div class="brand-icon" aria-hidden="true">▶</div>
+                <div class="brand-text">
+                    Lecture <span>Lens</span>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Learn Smarter
+                </div>
+
+                <h1>
+                    Your next
+                    <span>discovery</span>
+                    starts here.
+                </h1>
+
+                <p>
+                    Create your account and find the exact
+                    moment you need in your lecture videos.
+                    Spend less time searching and more time learning.
+                </p>
+            </div>
+
+            <div class="feature-list">
+                <div class="feature">
+                    <div class="feature-icon" aria-hidden="true">⌕</div>
+                    <span>Ask questions in natural language</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon" aria-hidden="true">◷</div>
+                    <span>Discover relevant lecture timestamps</span>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon" aria-hidden="true">▶</div>
+                    <span>Jump directly to the right moment</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-panel">
+            <div class="form-heading">
+                <h2>Create your account</h2>
+                <p>Join Lecture Finder and make learning easier.</p>
+            </div>
+
+            <form method="POST">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <div class="input-wrap">
+                        <input
+                            id="username"
+                            type="text"
+                            name="username"
+                            placeholder="Choose a username"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email address</label>
+                    <div class="input-wrap">
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="input-wrap">
+                        <input
+                            id="password"
+                            class="password-input"
+                            type="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required
+                        >
+                        <button
+                            class="toggle-password"
+                            type="button"
+                            id="togglePassword"
+                            aria-controls="password"
+                            aria-label="Show password"
+                        >
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <button class="signup-button" type="submit">
+                    Create Account &nbsp; →
+                </button>
+            </form>
+
+            <div class="login-link">
+                Already have an account?
+                <a href="/login">Sign in</a>
+            </div>
+
+            <div class="form-footer">
+                Built for smarter learning.<br>
+                Lecture Timestamp Finder
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        togglePassword.addEventListener("click", function () {
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+            togglePassword.textContent = isHidden ? "Hide" : "Show";
+            togglePassword.setAttribute(
+                "aria-label",
+                isHidden ? "Hide password" : "Show password"
+            );
+        });
+    </script>
+
+</body>
+</html>

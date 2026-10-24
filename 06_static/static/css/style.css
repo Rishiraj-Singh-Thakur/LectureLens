@@ -1,0 +1,322 @@
+/* Reset */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* Body */
+
+body{
+    background:#202123;
+    color:white;
+}
+
+/* Main Container */
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+/* Header */
+
+header{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+header h1{
+    font-size:2.5rem;
+    margin-bottom:10px;
+}
+
+header p{
+    color:#bdbdbd;
+}
+
+/* Hero Section */
+
+.hero{
+    display:flex;
+    flex-direction:column;
+    margin-bottom: 4px;
+}
+
+
+/* Playlist Section */
+
+.playlist-section{
+    width:100%;
+    margin-bottom: 4px;
+}
+
+.playlist-section img{
+    width:100%;
+    height: auto;
+    max-height: 300px;
+    display:block;
+    border-radius:15px;
+}
+
+.playlist-section img:hover{
+
+    transform:scale(1.02);
+
+}
+
+.playlist-section img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:15px;
+}
+
+.playlist-section img:hover{
+    transform:scale(1.02);
+}
+
+/* About Project */
+
+.about-project{
+    flex:1;
+
+    background:#2d2f34;
+
+    padding:25px;
+    max-height: 300px;
+    border-radius:15px;
+}
+
+.about-project h2{
+    margin-bottom:15px;
+}
+
+.about-project p{
+    line-height:1.8;
+    color:#d6d6d6;
+}
+
+/* Search Section */
+
+.search-section{
+    display:flex;
+    gap:10px;
+    margin-bottom:35px;
+}
+
+.search-section input{
+    flex:1;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    outline:none;
+}
+
+.search-section button{
+    padding:15px 25px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    background:#10a37f;
+
+    color:white;
+
+    font-weight:bold;
+}
+
+/* Popular Topics */
+
+.popular-topics{
+    margin-bottom:40px;
+}
+
+.popular-topics h2{
+    margin-bottom:15px;
+}
+
+.topic-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.topic-buttons button{
+
+    border:none;
+    background:#343541;
+    color:white;
+    padding:10px 18px;
+    border-radius:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.topic-buttons button:hover{
+    background:#10a37f;
+}
+
+/* Result Section */
+
+.result-section{
+
+    background:#2d2f34;
+    padding:8px 20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+.result-card{
+    padding: 3px;
+    border-radius:15px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    overflow-wrap:break-word;
+}
+.answer-text{
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.welcome-card h2{
+    margin-bottom:15px;
+}
+
+.welcome-card p{
+    color:#d6d6d6;
+    line-height:1.8;
+}
+/* Watch Button */
+
+.watch-section{
+    text-align:center;
+}
+
+.lecture-link{
+
+    display:inline-block;
+    margin-top:10px;
+    text-decoration:none;
+    font-weight:600;
+    padding:6px 12px;
+    border-radius:8px;
+}
+
+.lecture-link:hover{
+    background:rgba(255,255,255,0.08);
+}
+
+#loading-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(255,255,255,0.15);
+
+    backdrop-filter:blur(4px);
+
+    z-index:9999;
+
+    justify-content:center;
+    align-items:center;
+}
+
+.loading-box{
+
+    text-align:center;
+}
+
+.loading-box h3{
+
+    margin-top:15px;
+    margin-bottom:8px;
+}
+
+.loading-box p{
+
+    margin:0;
+}
+
+.loader{
+
+    width:30px;
+    height:30px;
+    border:4px solid #444;
+    border-top:4px solid #ffffff;
+    border-radius:50%;
+    margin:0 auto 10px;
+    animation:spin 1s linear infinite;
+}
+@keyframes spin{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+/* Tablet */
+
+@media(max-width:992px){
+    .hero{
+        flex-direction:column;
+    }
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    .container{
+        width:95%;
+        padding:10px;
+    }
+    header h1{
+    font-size:clamp(2.2rem, 5vw, 3.5rem);
+}
+    header p{
+        font-size:0.95rem;
+    }
+    .hero{
+        flex-direction:column;
+    }
+    .about-project{
+        width:100%;
+    }
+    .about-project h2{
+        font-size:1.5rem;
+    }
+    .about-project p{
+        font-size:1rem;
+    }
+    .search-section{
+        flex-direction:column;
+    }
+    .search-section button{
+        width:100%;
+    }
+    .search-section input{
+        width:100%;
+    }
+}

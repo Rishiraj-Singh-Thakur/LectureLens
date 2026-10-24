@@ -1,0 +1,1067 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Timestamp Finder | AI Learning</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        :root {
+            --bg: #080b16;
+            --panel: #111629;
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --text: #f4f5ff;
+            --muted: #9ba3bd;
+            --border: rgba(255,255,255,.09);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse at 15% 0%, #25204b 0%, transparent 38%),
+                radial-gradient(ellipse at 95% 35%, #15274a 0%, transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        .page {
+            width: min(1180px, 92%);
+            margin: auto;
+            padding: 30px 0 55px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 58px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 19px;
+            font-weight: 750;
+            letter-spacing: -.4px;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #8b5cf6, #5b4bdb);
+            box-shadow: 0 8px 28px #7856ef40;
+            font-size: 22px;
+        }
+
+        .brand span { color: var(--purple-light); }
+
+        .nav-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 48px;
+            margin-bottom: 46px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            border: 1px solid #a78bfa35;
+            border-radius: 30px;
+            background: #8b5cf612;
+            color: #c4b5fd;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a78bfa;
+            box-shadow: 0 0 10px #a78bfa;
+        }
+
+        h1 {
+            margin: 22px 0 17px;
+            font-size: clamp(36px, 5vw, 57px);
+            line-height: 1.12;
+            letter-spacing: -2px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #67e8f9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-description {
+            max-width: 540px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-visual {
+            padding: 25px;
+            min-height: 300px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            background: linear-gradient(145deg, #171d35, #101426);
+            box-shadow: 0 24px 70px #00000030;
+        }
+
+        .visual-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .visual-chip {
+            padding: 6px 9px;
+            border-radius: 8px;
+            background: #8b5cf622;
+            color: #c4b5fd;
+        }
+
+        .visual-icon {
+            display: grid;
+            place-items: center;
+            width: 76px;
+            height: 76px;
+            margin: 28px 0 18px;
+            border: 1px solid #a78bfa45;
+            border-radius: 23px;
+            background: linear-gradient(145deg, #8b5cf635, #67e8f915);
+            font-size: 35px;
+        }
+
+        .hero-visual h3 {
+            margin: 0 0 8px;
+            font-size: 21px;
+        }
+
+        .hero-visual p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .visual-footer {
+            display: flex;
+            gap: 8px;
+            margin-top: 22px;
+            color: #c4b5fd;
+            font-size: 12px;
+        }
+
+        .search-panel {
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: #111629e8;
+            box-shadow: 0 20px 65px #00000025;
+        }
+
+        .section-heading {
+            margin: 0 0 8px;
+            font-size: 22px;
+        }
+
+        .section-description {
+            margin: 0 0 22px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 0;
+            height: 57px;
+            padding: 0 16px;
+            border: 1px solid #ffffff18;
+            border-radius: 13px;
+            outline: none;
+            background: #090d1c;
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        /* Lecture search form */
+        .search-form {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            min-width: 0;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 900px) {
+            .search-form {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        .search-input:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px #8b5cf620;
+        }
+
+        .search-input::placeholder { color: #737d9b; }
+
+        select.search-input option {
+            background: #111629;
+            color: white;
+        }
+
+        .search-button {
+            min-height: 57px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #8b5cf6, #6553dc);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px #7654e52c;
+            transition: transform .2s, opacity .2s;
+        }
+
+        .search-button:hover { transform: translateY(-2px); }
+
+        .search-button:disabled {
+            opacity: .65;
+            cursor: wait;
+            transform: none;
+        }
+
+        .topics-section { margin-top: 35px; }
+
+        .topics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 17px;
+        }
+
+        .topics-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .topics-header span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .topic-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topic-button {
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            background: #141a2d;
+            color: #c7cde0;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .topic-button:hover,
+        .topic-button:focus-visible {
+            border-color: #8b5cf6a0;
+            background: #8b5cf61a;
+            color: #ddd2ff;
+        }
+
+        .result-panel {
+            margin-top: 35px;
+            padding: 28px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: linear-gradient(145deg, #131a2e, #0e1323);
+            scroll-margin-top: 25px;
+        }
+
+        .result-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .result-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            background: #8b5cf620;
+            font-size: 20px;
+        }
+
+        .result-title h2 {
+            margin: 0 0 5px;
+            font-size: 17px;
+        }
+
+        .result-title p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .welcome-message {
+            padding: 22px;
+            border: 1px dashed #ffffff20;
+            border-radius: 15px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Loading animation */
+        .loading-box {
+            padding: 30px 15px;
+            text-align: center;
+        }
+
+        .loader-ring {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 20px;
+            border: 4px solid #ffffff16;
+            border-top-color: #a78bfa;
+            border-right-color: #67e8f9;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            box-shadow: 0 0 25px #8b5cf625;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-title {
+            color: #e9ddff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .loading-subtitle {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .loading-dots::after {
+            content: "";
+            animation: dots 1.4s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75%, 100% { content: "..."; }
+        }
+
+        /* Actual search result */
+        .answer-card {
+            padding: 23px;
+            border: 1px solid #a78bfa35;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #8b5cf610, #67e8f908);
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 8px;
+            background: #8b5cf622;
+            color: #c4b5fd;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .answer-text {
+            margin: 18px 0 0;
+            color: #e5e7f5;
+            font-size: 14px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .answer-watch {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 12px 17px;
+            border: 1px solid #a78bfa50;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #8b5cf6, #6553dc);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .answer-watch:hover { opacity: .88; }
+
+        .answer-error {
+            padding: 18px;
+            border: 1px solid #fb718540;
+            border-radius: 12px;
+            background: #fb718510;
+            color: #fda4af;
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 45px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: #77809b;
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .page {
+                width: min(100% - 30px, 560px);
+                padding-top: 20px;
+            }
+
+            .navbar {
+                align-items: flex-start;
+                margin-bottom: 38px;
+            }
+
+            .nav-label {
+                max-width: 130px;
+                text-align: right;
+                line-height: 1.5;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            h1 { letter-spacing: -1.3px; }
+
+            .hero-visual { min-height: auto; }
+
+            .search-panel,
+            .result-panel { padding: 20px; }
+
+            .search-form { flex-direction: column; }
+
+            .search-button { width: 100%; }
+
+            .topics-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .footer { flex-direction: column; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+        
+        /* Admin Login button - top right */
+        .back-admin-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(139, 92, 246, 0.15);
+            color: #c4b5fd;
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .back-admin-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: #a78bfa;
+            transform: translateY(-2px);
+        }
+
+        /* Navbar positioning */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .back-admin-btn {
+                margin-left: auto;
+                padding: 8px 11px;
+                font-size: 12px;
+            }
+        }
+        .hero-visual {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .hero-visual,
+        .hero-visual:hover,
+        .hero-visual:focus,
+        .hero-visual:active {
+            text-decoration: none;
+            color: inherit;
+        }
+        .uploading-heading {
+            color: #a78bfa;
+            text-decoration: underline;
+            text-decoration-color: rgba(167, 139, 250, 0.6);
+            text-underline-offset: 6px;
+            cursor: pointer;
+            transition: color 0.25s ease,
+                        text-decoration-color 0.25s ease,
+                        transform 0.25s ease;
+        }
+
+        .hero-visual:hover .uploading-heading {
+            color: #c4b5fd;
+            text-decoration-color: #c4b5fd;
+        }
+
+        .hero-visual:hover .uploading-heading {
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+
+<body>
+<main class="page">
+
+    <!-- Header -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+            <div>Lecture <span>Lens</span></div>
+        </div>
+        <!-- <div class="nav-label">AI-Powered Learning Assistant</div> -->
+        <a href="/login" class="back-admin-btn">
+            <span>←</span> Back
+        </a>
+
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">
+                <span class="status-dot"></span>
+                SMART LECTURE SEARCH
+            </div>
+
+            <h1>
+                Find the topic.<br>
+                <span class="gradient-text">Skip the searching.</span>
+            </h1>
+
+            <p class="hero-description">
+                Stop scrolling through hours of lectures. Search for a
+                concept and discover the relevant lecture with its
+                timestamp using AI-powered semantic search.
+            </p>
+        </div>
+
+        <a href="/upload-video" class="hero-visual">
+            <div class="visual-top">
+                <span>YOUR LEARNING WORKSPACE</span>
+                <span class="visual-chip">Lecture Upload</span>
+            </div>
+
+            <div class="visual-icon">▶</div>
+
+            <h3 class="uploading-heading">Upload Your Lecture</h3>
+
+            <p>
+                Add your lecture videos to the platform and make them
+                searchable. Once processing is complete, users can find
+                important topics and jump directly to the relevant timestamps.
+            </p>
+
+            <div class="visual-footer">
+                <span>✦</span>
+                <span>Upload. Process. Search Smarter.</span>
+            </div>
+        </a>
+
+    </section>
+
+    <!-- Search Form -->
+    <section class="search-panel" id="search">
+        <h2 class="section-heading">What do you want to learn?</h2>
+
+        <p class="section-description">
+            Select a lecture and enter a topic to find its timestamp.
+        </p>
+
+
+        <form class="search-form" id="searchForm">
+
+            <!-- Searchable lecture dropdown -->
+            <input
+                class="search-input"
+                id="lecturePicker"
+                type="text"
+                list="lectureOptions"
+                placeholder="Search lecture by title or code..."
+                autocomplete="off"
+                aria-label="Search and select lecture">
+
+            <datalist id="lectureOptions">
+                {% for video in videos %}
+                <option value="{{ video[0] }} | {{ video[1] }}"></option>
+                {% endfor %}
+            </datalist>
+
+            <!-- Manual video code input -->
+            <input
+                class="search-input"
+                id="videoCode"
+                type="text"
+                name="video_code"
+                placeholder="Enter Video Code"
+                aria-label="Video code"
+                autocomplete="off"
+                required>
+
+            <!-- Topic search -->
+            <input
+                class="search-input"
+                id="topicInput"
+                type="text"
+                name="query"
+                placeholder="Try: recursion, loops, functions..."
+                aria-label="Search lecture topic"
+                autocomplete="off"
+                required>
+
+            <button
+                class="search-button"
+                id="searchButton"
+                type="submit">
+                🔍 Find Timestamp
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- Popular Topics -->
+    <section class="topics-section">
+        <div class="topics-header">
+            <h2>🔥 Explore Popular Topics</h2>
+            <span>Choose a topic to get started</span>
+        </div>
+
+        <div class="topic-buttons">
+            <button class="topic-button" type="button" data-topic="Variables">Variables</button>
+            <button class="topic-button" type="button" data-topic="Loops">Loops</button>
+            <button class="topic-button" type="button" data-topic="Functions">Functions</button>
+            <button class="topic-button" type="button" data-topic="OOPS">OOP</button>
+            <button class="topic-button" type="button" data-topic="Lists">Lists</button>
+            <button class="topic-button" type="button" data-topic="Dictionary">Dictionary</button>
+            <button class="topic-button" type="button" data-topic="Recursion">Recursion</button>
+            <button class="topic-button" type="button" data-topic="Strings">Strings</button>
+            <button class="topic-button" type="button" data-topic="Tuple">Tuple</button>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="result-panel" id="results" aria-live="polite">
+        <div class="result-title">
+            <div class="result-icon">✨</div>
+            <div>
+                <h2 id="resultHeading">Search Results</h2>
+                <p id="resultSubtitle">Your matching lecture will appear here.</p>
+            </div>
+        </div>
+
+        <div id="resultContent" class="welcome-message">
+            👋 Welcome! Select a lecture and search a topic to get started.
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>© Lecture Timestamp Finder</span>
+        <span>Built to make learning easier ✦</span>
+    </footer>
+
+</main>
+
+<script>
+"use strict";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const topicInput = document.getElementById("topicInput");
+        const searchForm = document.getElementById("searchForm");
+        const videoCode = document.getElementById("videoCode");
+        const lecturePicker = document.getElementById("lecturePicker");
+        const searchButton = document.getElementById("searchButton");
+
+        const resultContent = document.getElementById("resultContent");
+        const resultHeading = document.getElementById("resultHeading");
+        const resultSubtitle = document.getElementById("resultSubtitle");
+        const resultsSection = document.getElementById("results");
+
+        let isSearching = false;
+        lecturePicker.addEventListener("change", () => {
+            const selected = lecturePicker.value.trim();
+
+            if (selected.includes(" | ")) {
+                videoCode.value = selected.split(" | ")[0].trim();
+            }
+        });
+
+        // Check that the required HTML elements exist.
+        if (
+            !topicInput ||
+            !searchForm ||
+            !videoCode ||
+            !searchButton ||
+            !resultContent ||
+            !resultHeading ||
+            !resultSubtitle ||
+            !resultsSection
+        ) {
+            console.error(
+                "Required HTML elements are missing. Check the IDs in index.html."
+            );
+            return;
+        }
+
+        // Popular topic buttons.
+        document.querySelectorAll("[data-topic]").forEach((button) => {
+            button.addEventListener("click", () => {
+                topicInput.value = button.dataset.topic || "";
+
+                const searchSection = document.getElementById("search");
+
+                if (searchSection) {
+                    searchSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+                }
+
+                topicInput.focus();
+            });
+        });
+
+        // Display loading animation.
+        function showLoading(query) {
+            resultHeading.textContent = "Finding Your Lecture";
+            resultSubtitle.textContent =
+                "Please wait while the AI searches your lecture.";
+
+            resultContent.className = "loading-box";
+            resultContent.replaceChildren();
+
+            const spinner = document.createElement("div");
+            spinner.className = "loader-ring";
+            spinner.setAttribute("role", "status");
+            spinner.setAttribute("aria-label", "Searching lecture");
+
+            const title = document.createElement("div");
+            title.className = "loading-title";
+            title.textContent = `Searching for: ${query}`;
+
+            const subtitle = document.createElement("div");
+            subtitle.className = "loading-subtitle";
+
+            const message = document.createElement("span");
+            message.textContent =
+                "Matching your topic with lecture content";
+
+            const dots = document.createElement("span");
+            dots.className = "loading-dots";
+            dots.setAttribute("aria-hidden", "true");
+
+            subtitle.append(message, dots);
+            resultContent.append(spinner, title, subtitle);
+
+            resultsSection.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+
+        // Display errors safely.
+        function showError(message) {
+            resultHeading.textContent = "Search Unsuccessful";
+            resultSubtitle.textContent =
+                "Please check the message below.";
+
+            resultContent.className = "answer-error";
+            resultContent.replaceChildren();
+
+            const errorMessage = document.createElement("p");
+            errorMessage.textContent = message;
+
+            resultContent.appendChild(errorMessage);
+        }
+
+        // Display the answer received from Flask.
+        function showResult(data) {
+            resultHeading.textContent = "Your Lecture Result";
+            resultSubtitle.textContent =
+                "The AI search has finished successfully.";
+
+            resultContent.className = "answer-card";
+            resultContent.replaceChildren();
+
+            const badge = document.createElement("span");
+            badge.className = "answer-badge";
+
+            const lectureNumber = data.lecture_num;
+
+            badge.textContent =
+                lectureNumber !== null &&
+                lectureNumber !== undefined &&
+                String(lectureNumber).trim() !== ""
+                    ? `LECTURE ${lectureNumber}`
+                    : "AI SEARCH RESULT";
+
+            const answer = document.createElement("div");
+            answer.className = "answer-text";
+            answer.textContent =
+                typeof data.answer === "string" && data.answer.trim()
+                    ? data.answer
+                    : "No answer was returned by the search engine.";
+
+            resultContent.append(badge, answer);
+
+            // Show the lecture video link if the backend returns one.
+            if (
+                typeof data.video_link === "string" &&
+                data.video_link.trim()
+            ) {
+                try {
+                    const url = new URL(
+                        data.video_link,
+                        window.location.href
+                    );
+
+                    if (
+                        url.protocol === "https:" ||
+                        url.protocol === "http:"
+                    ) {
+                        const link = document.createElement("a");
+
+                        link.href = url.href;
+                        link.target = "_blank";
+                        link.rel = "noopener noreferrer";
+                        link.className = "answer-watch";
+                        link.textContent = "▶ Watch Lecture";
+
+                        resultContent.appendChild(link);
+                    }
+                } catch (error) {
+                    console.error("Invalid video link:", error);
+                }
+            }
+        }
+
+        // Send the search request to the Flask backend.
+        searchForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (isSearching) {
+                return;
+            }
+
+            const query = topicInput.value.trim();
+            const code = videoCode.value.trim();
+
+            if (!code) {
+                showError("Please select a lecture first.");
+                videoCode.focus();
+                return;
+            }
+
+            if (!query) {
+                showError("Please enter the topic you want to find.");
+                topicInput.focus();
+                return;
+            }
+
+            isSearching = true;
+            searchButton.disabled = true;
+            searchButton.textContent = "Searching...";
+
+            showLoading(query);
+
+            try {
+                const response = await fetch("/api/search", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    credentials: "same-origin",
+                    body: JSON.stringify({
+                        query: query,
+                        video_code: code
+                    })
+                });
+
+                // Read the response body only once.
+                const contentType =
+                    response.headers.get("content-type") || "";
+
+                const responseText = await response.text();
+
+                if (!contentType.includes("application/json")) {
+                    console.error(
+                        "Unexpected Flask response:",
+                        response.status,
+                        responseText
+                    );
+
+                    if (response.redirected) {
+                        throw new Error(
+                            "Your login session may have expired. Please log in again."
+                        );
+                    }
+
+                    throw new Error(
+                        `Server returned HTTP ${response.status}, not JSON. ` +
+                        "Check the Flask terminal for the error."
+                    );
+                }
+
+                let data;
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch (error) {
+                    throw new Error(
+                        "The server returned invalid JSON. Check the Flask terminal."
+                    );
+                }
+
+                if (!response.ok || data.success !== true) {
+                    throw new Error(
+                        data.message || `Search failed (HTTP ${response.status}).`
+                    );
+                }
+
+                showResult(data);
+
+            } catch (error) {
+                console.error("Lecture search error:", error);
+
+                showError(
+                    error.message ||
+                    "Unable to search right now. Please try again."
+                );
+
+            } finally {
+                isSearching = false;
+                searchButton.disabled = false;
+                searchButton.textContent = "🔍 Find Timestamp";
+            }
+        });
+    });
+
+</script>
+
+</body>
+</html>
