@@ -10,3 +10,4 @@ SQLAlchemy
 scikit-learn
 PyMySQL
 pandas
+gunicorn
