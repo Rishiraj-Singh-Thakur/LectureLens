@@ -280,44 +280,47 @@ Output Format:
 # Give prompt to Ollama model (ollama pull qwen2.5:7b) and take output_text by model
 
 # Dounload ollama qwen2.5:7b  (model 4.7GB)
-
 # ============================================================
-# Generate Answer Using Qwen2.5:7b
+# Generate Answer Using Groq API
 # ============================================================
 
-OLLAMA_URL = os.getenv(
-    "OLLAMA_URL",
-    "http://localhost:11434"
-)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 
 def llm_output(prompt):
 
     try:
         response = requests.post(
-            f"{OLLAMA_URL}/api/generate",
-            json={
-                "model": "qwen2.5:7b",
-                "prompt": prompt,
-                "stream": False
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json"
             },
-            timeout=300
+            json={
+                "model": "llama-3.3-70b-versatile",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                "temperature": 0.2
+            },
+            timeout=120
         )
 
         response.raise_for_status()
 
-        answer = response.json().get("response")
+        answer = response.json()["choices"][0]["message"]["content"]
 
         if not answer:
-            raise RuntimeError(
-                "Ollama returned an empty answer."
-            )
+            raise RuntimeError("Groq returned an empty answer.")
 
         return answer
 
     except requests.exceptions.RequestException as error:
         raise RuntimeError(
-            f"Qwen answer generation failed: {error}"
+            f"Groq answer generation failed: {error}"
         ) from error
 
 # ---------------------------------------------------------
