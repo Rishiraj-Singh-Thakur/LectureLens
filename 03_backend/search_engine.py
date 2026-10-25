@@ -285,11 +285,17 @@ Output Format:
 # Generate Answer Using Qwen2.5:7b
 # ============================================================
 
+OLLAMA_URL = os.getenv(
+    "OLLAMA_URL",
+    "http://localhost:11434"
+)
+
+
 def llm_output(prompt):
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/generate",
+            f"{OLLAMA_URL}/api/generate",
             json={
                 "model": "qwen2.5:7b",
                 "prompt": prompt,
