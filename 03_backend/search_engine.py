@@ -37,7 +37,13 @@ def create_embedding(text_list):
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/embed",
+            # "http://localhost:11434/api/embed",  changing/////////////
+            f"{os.getenv('OLLAMA_PROXY_URL')}/api/embed",
+            # ///
+            headers={
+                "X-API-Key": os.getenv("OLLAMA_PROXY_KEY")
+            },
+            # //
             json={
                 "model": "bge-m3",
                 "input": text_list
@@ -277,51 +283,30 @@ Output Format:
 # ------------------------------------------------------------------------------------------------------------------------------
 # '''                               Ollama Model Code                   '''
 
-# Give prompt to Ollama model (ollama pull qwen2.5:7b) and take output_text by model
 
-# Dounload ollama qwen2.5:7b  (model 4.7GB)
 # ============================================================
-# Generate Answer Using Groq API
+# Generate Answer Using Ollama
 # ============================================================
-
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
 
 def llm_output(prompt):
+    response = requests.post(
+        # "http://localhost:11434/api/generate",  changing ///////////
+        f"{os.getenv('OLLAMA_PROXY_URL')}/api/generate",
+        # //
+        headers={
+            "X-API-Key": os.getenv("OLLAMA_PROXY_KEY")
+        },
+        # ///
+        json={
+            "model": "qwen2.5:7b",
+            "prompt": prompt,
+            "stream": False
+        },
+        timeout=120
+    )
 
-    try:
-        response = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {GROQ_API_KEY}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "llama-3.3-70b-versatile",
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                "temperature": 0.2
-            },
-            timeout=120
-        )
-
-        response.raise_for_status()
-
-        answer = response.json()["choices"][0]["message"]["content"]
-
-        if not answer:
-            raise RuntimeError("Groq returned an empty answer.")
-
-        return answer
-
-    except requests.exceptions.RequestException as error:
-        raise RuntimeError(
-            f"Groq answer generation failed: {error}"
-        ) from error
+    response.raise_for_status()
+    return response.json()["response"]
 
 # ---------------------------------------------------------
 # Get Answer For Selected Video And Topic

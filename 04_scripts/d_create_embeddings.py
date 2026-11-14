@@ -10,7 +10,14 @@ import os
 def create_embedding(text_list):
 
     response = requests.post(
-        "http://localhost:11434/api/embed",
+        # "http://localhost:11434/api/embed", changing////////////
+        f"{os.getenv('OLLAMA_PROXY_URL')}/api/embed",
+        # ////
+        headers={
+            "X-API-Key": os.getenv("OLLAMA_PROXY_KEY")
+        },
+
+        # ////
         json={
             "model": "bge-m3",
             "input": text_list
