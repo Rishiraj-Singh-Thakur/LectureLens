@@ -37,13 +37,7 @@ def create_embedding(text_list):
 
     try:
         response = requests.post(
-            # "http://localhost:11434/api/embed",  changing/////////////
-            f"{os.getenv('OLLAMA_PROXY_URL')}/api/embed",
-            # ///
-            headers={
-                "X-API-Key": os.getenv("OLLAMA_PROXY_KEY")
-            },
-            # //
+            "http://localhost:11434/api/embed",
             json={
                 "model": "bge-m3",
                 "input": text_list
@@ -290,13 +284,7 @@ Output Format:
 
 def llm_output(prompt):
     response = requests.post(
-        # "http://localhost:11434/api/generate",  changing ///////////
-        f"{os.getenv('OLLAMA_PROXY_URL')}/api/generate",
-        # //
-        headers={
-            "X-API-Key": os.getenv("OLLAMA_PROXY_KEY")
-        },
-        # ///
+        "http://localhost:11434/api/generate",
         json={
             "model": "qwen2.5:7b",
             "prompt": prompt,
