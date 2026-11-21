@@ -3,6 +3,8 @@ import sys
 import secrets
 import uuid
 import webbrowser
+import subprocess
+
 
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
@@ -113,6 +115,7 @@ def login():
         )
 
         user = cur.fetchone()
+        cur.close()
 
         if user:
             session["user_id"] = user[0]
@@ -121,15 +124,148 @@ def login():
 
             if user[4] == "admin":
                 return redirect("/admin-dashboard")
-
             else:
                 return redirect("/")
 
         else:
             return """
-            Account not found.<br><br>
-            <a href='/signup'>Create New Account</a>
-            """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Account Not Found | LectureLens</title>
+
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                            font-family: "Segoe UI", Arial, sans-serif;
+                        }
+
+                        body {
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #080b16;
+                            color: #f8fafc;
+                            padding: 20px;
+                        }
+
+                        .error-card {
+                            width: 100%;
+                            max-width: 460px;
+                            padding: 48px 35px;
+                            text-align: center;
+                            background: #11172a;
+                            border: 1px solid rgba(255,255,255,0.1);
+                            border-radius: 24px;
+                            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+                            animation: appear 0.5s ease;
+                        }
+
+                        .error-icon {
+                            width: 85px;
+                            height: 85px;
+                            margin: 0 auto 25px;
+                            display: grid;
+                            place-items: center;
+                            border-radius: 50%;
+                            background: rgba(239,68,68,0.12);
+                            border: 2px solid #ef4444;
+                            color: #f87171;
+                            font-size: 42px;
+                        }
+
+                        h1 {
+                            font-size: 27px;
+                            margin-bottom: 13px;
+                        }
+
+                        p {
+                            color: #a5aec5;
+                            font-size: 14px;
+                            line-height: 1.7;
+                            margin-bottom: 30px;
+                        }
+
+                        .btn {
+                            display: block;
+                            width: 100%;
+                            padding: 14px;
+                            margin-top: 13px;
+                            border-radius: 11px;
+                            text-decoration: none;
+                            font-size: 14px;
+                            font-weight: 700;
+                            transition: 0.2s;
+                        }
+
+                        .primary {
+                            color: white;
+                            background: linear-gradient(100deg,#7863f8,#5b50e8);
+                        }
+
+                        .secondary {
+                            color: #c4b5fd;
+                            background: #1b2340;
+                            border: 1px solid #303950;
+                        }
+
+                        .btn:hover {
+                            transform: translateY(-2px);
+                        }
+
+                        .brand {
+                            margin-top: 28px;
+                            color: #69758d;
+                            font-size: 12px;
+                        }
+
+                        @keyframes appear {
+                            from {
+                                opacity: 0;
+                                transform: translateY(15px);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                        }
+                    </style>
+                </head>
+
+                <body>
+                    <div class="error-card">
+
+                        <div class="error-icon">!</div>
+
+                        <h1>Account Not Found</h1>
+
+                        <p>
+                            We couldn't find an account with these details.
+                            Please check your credentials or create a new account
+                            to continue using LectureLens.
+                        </p>
+
+                        <a href="/signup" class="btn primary">
+                            Create New Account →
+                        </a>
+
+                        <a href="/login" class="btn secondary">
+                            Back to Login
+                        </a>
+
+                        <div class="brand">
+                            LectureLens · Find Any Topic. Jump to the Exact Moment.
+                        </div>
+
+                    </div>
+                </body>
+                </html>
+                """
 
     return render_template(
         "auth/login.html"
@@ -354,6 +490,167 @@ def signup():
         password = request.form["password"]
 
         cur = mysql.connection.cursor()
+        cur.execute(
+            "SELECT id FROM users WHERE email = %s",
+            (email,)
+        )
+
+        existing_user = cur.fetchone()
+
+        if existing_user:
+            cur.close()
+
+            return """
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Email Already Registered | LectureLens</title>
+
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: "Segoe UI", Arial, sans-serif;
+                    }
+
+                    body {
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #080b16;
+                        color: #f8fafc;
+                        padding: 20px;
+                    }
+
+                    .error-card {
+                        width: 100%;
+                        max-width: 460px;
+                        padding: 48px 35px;
+                        text-align: center;
+                        background: #11172a;
+                        border: 1px solid rgba(255,255,255,0.1);
+                        border-radius: 24px;
+                        box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+                        animation: appear 0.5s ease;
+                    }
+
+                    .error-icon {
+                        width: 85px;
+                        height: 85px;
+                        margin: 0 auto 25px;
+                        display: grid;
+                        place-items: center;
+                        border-radius: 50%;
+                        background: rgba(239,68,68,0.12);
+                        border: 2px solid #ef4444;
+                        color: #f87171;
+                        font-size: 40px;
+                        font-weight: 700;
+                    }
+
+                    h1 {
+                        font-size: 26px;
+                        margin-bottom: 13px;
+                    }
+
+                    p {
+                        color: #a5aec5;
+                        font-size: 14px;
+                        line-height: 1.7;
+                        margin-bottom: 30px;
+                    }
+
+                    .btn {
+                        display: block;
+                        width: 100%;
+                        padding: 14px;
+                        margin-top: 13px;
+                        border-radius: 11px;
+                        text-decoration: none;
+                        font-size: 14px;
+                        font-weight: 700;
+                        transition: 0.2s;
+                    }
+
+                    .primary {
+                        color: white;
+                        background: linear-gradient(100deg,#7863f8,#5b50e8);
+                        box-shadow: 0 10px 25px rgba(99,80,232,0.2);
+                    }
+
+                    .secondary {
+                        color: #c4b5fd;
+                        background: #1b2340;
+                        border: 1px solid #303950;
+                    }
+
+                    .btn:hover {
+                        transform: translateY(-2px);
+                    }
+
+                    .brand {
+                        margin-top: 28px;
+                        color: #69758d;
+                        font-size: 12px;
+                    }
+
+                    @keyframes appear {
+                        from {
+                            opacity: 0;
+                            transform: translateY(15px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+
+                    @media (max-width: 480px) {
+                        .error-card {
+                            padding: 38px 24px;
+                        }
+
+                        h1 {
+                            font-size: 23px;
+                        }
+                    }
+                </style>
+            </head>
+
+            <body>
+                <div class="error-card">
+
+                    <div class="error-icon">!</div>
+
+                    <h1>Email Already Registered!</h1>
+
+                    <p>
+                        An account with this email address already exists.
+                        Please login using your existing account or try
+                        signing up with another email address.
+                    </p>
+
+                    <a href="/login" class="btn primary">
+                        Login Now →
+                    </a>
+
+                    <a href="/signup" class="btn secondary">
+                        Try Another Email
+                    </a>
+
+                    <div class="brand">
+                        LectureLens · Find Any Topic. Jump to the Exact Moment.
+                    </div>
+
+                </div>
+            </body>
+            </html>
+            """
+
 
         cur.execute(
             """
@@ -369,21 +666,143 @@ def signup():
         cur.close()
 
         return """
-            <h2>Account Created Successfully ✅</h2>
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Account Created | LectureLens</title>
 
-            <br>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                        font-family: "Segoe UI", Arial, sans-serif;
+                    }
 
-            <a href='/login'>
-                <button>Login Now</button>
-            </a>
+                    body {
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #080b16;
+                        color: #f8fafc;
+                        padding: 20px;
+                    }
 
-            <br><br>
+                    .success-card {
+                        width: 100%;
+                        max-width: 460px;
+                        padding: 48px 35px;
+                        text-align: center;
+                        background: #11172a;
+                        border: 1px solid rgba(255,255,255,0.1);
+                        border-radius: 24px;
+                        box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+                        animation: appear 0.5s ease;
+                    }
 
-            <a href='/'>
-                <button>Go To Main Page</button>
-            </a>
+                    .success-icon {
+                        width: 85px;
+                        height: 85px;
+                        margin: 0 auto 25px;
+                        display: grid;
+                        place-items: center;
+                        border-radius: 50%;
+                        background: rgba(34,197,94,0.12);
+                        border: 2px solid #22c55e;
+                        color: #4ade80;
+                        font-size: 42px;
+                    }
+
+                    h1 {
+                        font-size: 27px;
+                        margin-bottom: 13px;
+                    }
+
+                    p {
+                        color: #a5aec5;
+                        font-size: 14px;
+                        line-height: 1.7;
+                        margin-bottom: 30px;
+                    }
+
+                    .btn {
+                        display: block;
+                        width: 100%;
+                        padding: 14px;
+                        margin-top: 13px;
+                        border-radius: 11px;
+                        text-decoration: none;
+                        font-size: 14px;
+                        font-weight: 700;
+                        transition: 0.2s;
+                    }
+
+                    .primary {
+                        color: white;
+                        background: linear-gradient(100deg,#7863f8,#5b50e8);
+                    }
+
+                    .secondary {
+                        color: #c4b5fd;
+                        background: #1b2340;
+                        border: 1px solid #303950;
+                    }
+
+                    .btn:hover {
+                        transform: translateY(-2px);
+                    }
+
+                    .brand {
+                        margin-top: 28px;
+                        color: #69758d;
+                        font-size: 12px;
+                    }
+
+                    @keyframes appear {
+                        from {
+                            opacity: 0;
+                            transform: translateY(15px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                </style>
+            </head>
+
+            <body>
+                <div class="success-card">
+
+                    <div class="success-icon">✓</div>
+
+                    <h1>Account Created Successfully!</h1>
+
+                    <p>
+                        Welcome to LectureLens! Your account has been
+                        created successfully. Start exploring your
+                        lecture videos and discover topics instantly.
+                    </p>
+
+                    <a href="/login" class="btn primary">
+                        Login Now →
+                    </a>
+
+                    <a href="/" class="btn secondary">
+                        Go To Main Page
+                    </a>
+
+                    <div class="brand">
+                        LectureLens · Find Any Topic. Jump to the Exact Moment.
+                    </div>
+
+                </div>
+            </body>
+            </html>
             """
-
 
     return render_template(
         "auth/signup.html"
@@ -491,11 +910,46 @@ def logout():
 
     return redirect("/login")
 
-import webbrowser
 if __name__ == "__main__":
+
+    import requests
+    import time
+    import shutil
+
+    ollama_url = "http://127.0.0.1:11434/api/tags"
+
+    try:
+        # Check if Ollama is already running
+        requests.get(ollama_url, timeout=3)
+
+    except requests.exceptions.RequestException:
+
+        ollama_path = shutil.which("ollama")
+
+        if not ollama_path:
+            raise RuntimeError("Ollama executable not found in PATH.")
+
+        # Start Ollama in background
+        subprocess.Popen(
+            [ollama_path, "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=subprocess.CREATE_NO_WINDOW
+        )
+
+        # Wait for Ollama API
+        for _ in range(60):
+            try:
+                requests.get(ollama_url, timeout=2)
+                break
+            except requests.exceptions.RequestException:
+                time.sleep(1)
+        else:
+            raise RuntimeError("Ollama failed to start.")
+
     webbrowser.open("http://127.0.0.1:5000")
-    app.run(debug=True , use_reloader = False)
-
-
-
-# & "C:\Users\Rishiraj singh\anaconda3\python.exe" "c:/Data_Science_journy/Lecture Timestamp Finder (Project -2)/app.py"
+    app.run(debug=True, use_reloader=False)
+    
+# & "C:\Users\Rishiraj singh\anaconda3\Scripts\activate"
+# conda activate LectureLens
+# python app.py
