@@ -2,7 +2,7 @@
 
 **Find Any Topic. Jump to the Exact Moment.**
 
-LectureLens is a web application designed to help learners and people to find specific
+LectureLens is a web application designed to help users to find specific
 topics inside their videos without manually searching
 through hours of content. It combines lecture transcription, text
 embeddings, similarity search, database storage, and a Flask web
