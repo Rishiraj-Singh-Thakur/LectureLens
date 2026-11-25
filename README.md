@@ -489,14 +489,14 @@ Potential future improvements include:
 ## ⭐ Project Highlights
 
 -   ✅ **Lecture Topic Search:** Search for programming concepts in
-    processed lecture content.
--   ✅ **Transcription Pipeline:** Use Whisper to turn lecture audio
+    processed viode content.
+-   ✅ **Transcription Pipeline:** Use Whisper to turn videos audio
     into text.
 -   ✅ **Embedding-Based Retrieval:** Generate embeddings with Ollama
     `bge-m3`.
 -   ✅ **Timestamp-Oriented Results:** Help users locate relevant
-    moments in lectures.
--   ✅ **Database Integration:** Use MySQL to store and retrieve lecture
+    moments in video.
+-   ✅ **Database Integration:** Use MySQL to store and retrieve video
     information.
 -   ✅ **Full-Stack Interface:** Build the application with Flask, HTML,
     CSS, and JavaScript.
