@@ -2,40 +2,38 @@
 
 **Find Any Topic. Jump to the Exact Moment.**
 
-LectureLens is a web application designed to help users to find specific
-topics inside their videos without manually searching
-through hours of content. It combines lecture transcription, text
-embeddings, similarity search, database storage, and a Flask web
-interface to help users locate relevant lecture moments.
+LectureLens is a web application designed to help users find specific information within long videos without manually searching through hours of content. It can be used for various purposes, including educational lectures, office meetings, professional discussions, training sessions, and other video-based content.
 
-------------------------------------------------------------------------
+By combining speech-to-text transcription, text embeddings, similarity search, database storage, and a Flask-based web interface, LectureLens enables users to search for specific topics, retrieve relevant video content, and locate the corresponding timestamps quickly and efficiently.
+
+---
 
 ## 🌐 Live Demo
 
-**Live Demo:** Coming soon --- deployment is planned.
+**Live Demo:** Currently, a public live demo is not available due to deployment limitations associated with running Ollama and its BGE-M3 embedding model on free hosting platforms.
 
--   **GitHub Repository:**
-    [Rishiraj-Singh-Thakur/LectureLens](https://github.com/Rishiraj-Singh-Thakur/LectureLens)
+LectureLens currently supports local execution with the required services and models configured on the user's machine.
 
-------------------------------------------------------------------------
+- **GitHub Repository:** [Rishiraj-Singh-Thakur/LectureLens](https://github.com/Rishiraj-Singh-Thakur/LectureLens)
+
+---
 
 ## 📌 Project Overview
 
-The goal of LectureLens is to make programming lecture content easier to
-search and revisit. Instead of scrubbing through a long video to find
-one concept, users can search for a topic and find relevant lecture
-content with associated timestamps.
+LectureLens is designed to make information retrieval from long videos faster and more efficient. Whether it is an educational lecture, office meeting, corporate training session, technical discussion, or any other recorded video, users can search for specific topics instead of manually navigating through hours of content.
+
+By leveraging speech-to-text transcription, text chunking, embedding generation, and similarity-based retrieval, LectureLens identifies relevant video content and its associated timestamps, allowing users to quickly find and revisit the information they need.
 
 The project brings together:
 
--   Lecture video upload and processing
--   Audio transcription using OpenAI Whisper
--   Text chunking for searchable lecture content
--   Embedding generation using Ollama's `bge-m3` model
--   Similarity-based retrieval using Scikit-learn
--   MySQL database integration
--   A Flask web application with HTML, CSS, and JavaScript
--   A search interface for locating topics and timestamps
+- Video upload and processing
+- Audio transcription using OpenAI Whisper
+- Text chunking for efficient content retrieval
+- Embedding generation using Ollama's `bge-m3` model
+- Semantic similarity search using Scikit-learn
+- MySQL database integration for lecture and video information
+- A Flask-based web application with HTML, CSS, and JavaScript
+- An interactive search interface for finding relevant topics and timestamps
 
 ------------------------------------------------------------------------
 
@@ -43,144 +41,104 @@ The project brings together:
 
 ### 🔎 Topic Search and Timestamp Discovery
 
-LectureLens is designed to help users find where a concept is discussed
-in a lecture.
+LectureLens allows users to search for specific topics within long videos and quickly find the relevant moments using associated timestamps.
 
-Example searches include:
+**Example searches:**
+- Where are Python loops explained?
+- Find the discussion about project deadlines.
+- Where is recursion covered?
+- Find the explanation of a specific concept.
+- What was discussed in the meeting about a particular topic?
 
--   Where are Python loops explained?
--   Find the lecture about dictionaries.
--   Where is recursion covered?
--   Find the explanation of functions.
--   Which lecture discusses object-oriented programming?
-
-The search workflow uses processed lecture content to retrieve relevant
-matches and their associated lecture information.
+The system retrieves relevant video content and displays matching results with their timestamps.
 
 ------------------------------------------------------------------------
 
 ## ✨ Main Features
 
 ### 1. 🔐 Login Interface
-
-A dedicated sign-in interface for accessing the application.
+Provides a sign-in interface for secure application access.
 
 ### 2. 🧑‍💻 Admin Dashboard
+Provides access to video management tools, uploaded content, and the search interface.
 
-A central dashboard for accessing lecture-management tools, including
-video upload, viewing uploaded videos, and the main search page.
-
-### 3. 🎬 Lecture Upload
-
-Upload a lecture video and provide metadata such as video code, course,
-lecture number, lecture title, and topic.
+### 3. 🎬 Video Upload
+Allows admins to upload videos with details such as video code, course, lecture number, title, and topic.
 
 ### 4. 🎙️ Speech Transcription
-
-Use OpenAI Whisper to convert lecture audio into text for downstream
-processing.
+Uses OpenAI Whisper to convert video audio into text.
 
 ### 5. 🧠 Embedding Generation
-
-Use Ollama's `bge-m3` model to generate embeddings for lecture text.
+Uses Ollama's `bge-m3` model to generate text embeddings.
 
 ### 6. 🔍 Similarity Search
-
-Use a Scikit-learn-based similarity-search workflow to identify lecture
-content relevant to a user's query.
+Uses Scikit-learn to find content relevant to a user's search query.
 
 ### 7. ⏱️ Timestamp Discovery
-
-Help users locate relevant moments in lecture content using the
-associated timestamp information.
+Identifies relevant moments in videos and displays their associated timestamps.
 
 ### 8. 🗄️ MySQL Integration
-
-Store and retrieve lecture-related information through the MySQL
-database.
+Stores and retrieves video metadata and related information using MySQL.
 
 ### 9. 🌐 Web Interface
-
-A Flask application with HTML, CSS, and JavaScript provides the
-user-facing interface.
+Provides an interactive user interface built with Flask, HTML, CSS, and JavaScript.
 
 ------------------------------------------------------------------------
 
 ## 🏗️ Project Architecture
 
-The diagram below describes the overall lecture-processing and search
-workflow.
+The following diagram illustrates the overall video-processing and content-search workflow of LectureLens.
 
-``` mermaid
+```mermaid
 flowchart TD
-    A[Lecture Video] --> B[Audio Processing]
+    A[Video Upload] --> B[Audio Processing]
     B --> C[OpenAI Whisper Transcription]
-    C --> D[Transcribed Lecture Text]
+    C --> D[Transcribed Text]
     D --> E[Text Chunking]
     E --> F[Ollama bge-m3 Embeddings]
     F --> G[Vector Data]
-    D --> H[Lecture Metadata and Text]
+    D --> H[Video Metadata and Transcript]
     H --> I[MySQL Database]
     J[User Search Query] --> K[Query Processing]
     K --> L[Similarity Search]
     G --> L
     I --> L
-    L --> M[Relevant Lecture Content]
-    M --> N[Lecture Details and Timestamps]
+    L --> M[Relevant Video Content]
+    M --> N[Video Details and Timestamps]
     N --> O[Flask Web Interface]
 ```
 
-*This is a high-level representation of the project workflow. Exact
-processing steps and data flow may vary by implementation.*
+*This diagram provides a high-level overview of the system architecture. Individual processing steps may vary depending on the implementation.*
 
 ------------------------------------------------------------------------
-
 ## 🔄 How It Works
 
-### 1. Lecture Upload
-
-A lecture video is submitted through the upload interface along with its
-metadata.
+### 1. Video Upload
+Users upload a video through the interface along with its relevant metadata.
 
 ### 2. Audio Processing
-
-The processing workflow prepares audio from the video. FFmpeg is
-required for media-processing tasks where configured by the project.
+FFmpeg processes the video and extracts audio for transcription.
 
 ### 3. Transcription
-
-OpenAI Whisper converts spoken lecture audio into text.
+OpenAI Whisper converts the extracted audio into text.
 
 ### 4. Text Preparation
-
-The transcribed content is organized into smaller chunks for retrieval.
-Relevant lecture metadata and timestamp information are used to connect
-results back to the lecture.
+The transcript is divided into smaller chunks, with timestamps and metadata linked to the relevant content.
 
 ### 5. Embedding Generation
-
-Ollama's `bge-m3` model converts text into vector embeddings that can be
-compared for semantic similarity.
+Ollama's `bge-m3` model converts text chunks into vector embeddings.
 
 ### 6. Data Storage
-
-Lecture information is stored in MySQL, while vector-related data is
-handled by the project's vector workflow.
+Video metadata and related information are stored in MySQL, while vector data is managed by the project's vector workflow.
 
 ### 7. Search Query
-
-A user selects or enters a lecture and topic through the search
-interface.
+Users enter a topic or question through the search interface.
 
 ### 8. Similarity Search
+The system compares the query with stored embeddings to identify relevant video content.
 
-The search engine compares the query with processed lecture content to
-find relevant matches.
-
-### 9. Results
-
-The application displays relevant lecture information and associated
-timestamps, helping the user find the section to revisit.
+### 9. Search Results
+Relevant content, video details, and associated timestamps are displayed so users can quickly locate the required moment.
 
 ------------------------------------------------------------------------
 
